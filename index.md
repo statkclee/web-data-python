@@ -1,37 +1,36 @@
 ---
 layout: page
-title: Working With Data on the Web
+title: 웹에 있는 데이터 작업
 ---
-This lesson explains how to consume data from the web,
-and how to create data for others to use.
+이번 수업은 웹으로부터 데이터를 소비하는 방법과
+다른 사람이 사용할 데이터를 생성하는 방법을 설명한다.
 
-> ## Prerequisites {.prereq}
+> ##  전제조건 {.prereq}
 >
-> This lesson assumes learners understand basic Python programming,
-> and can:
+> 이번 수업은 기본적인 파이썬 프로그래밍 이해를 학습자가 갖고 있는 것을 가정한다. 그리고 다음을 수행할 수 있어야 된다:
 >
-> *   Install Python libraries
-> *   Use strings and lists
-> *   Write and call simple functions
-> *   Access the Internet in class
+> *   파이썬 라이브러리 설치
+> *   문자열과 리스트 사용
+> *   간단한 함수 작성과 함수 호출
+> *   수업 중에 인터넷에 접속
 
-> ## Getting ready {.getready}
+> ## 사전 준비사항 {.getready}
 >
-> You must have Python and network access,
-> and you will need to be able to install Python libraries on your computer.
+> 파이썬과 네트워크 접속이 되어있어야 된다.
+> 컴퓨터에 파이썬 라이브러리를 설치할 필요가 있다.
 
-## Topics
+## 학습 주제
 
-1.  [Getting Data](01-getdata.html)
-2.  [Handling CSV Data](02-csv.html)
-3.  [Generalizing and Handling Errors](03-generalize.html)
-4.  [Visualization](04-visualize.html)
-5.  [Publishing Data](05-makedata.html)
-6.  [Making Data Findable](06-findable.html)
+1.  [데이터 입수](01-getdata.html)
+2.  [CSV 데이터 처리](02-csv.html)
+3.  [오류(Error) 일반화와 처리](03-generalize.html)
+4.  [시각화](04-visualize.html)
+5.  [데이터 게시](05-makedata.html)
+6.  [데이터를 찾울 수 있게 만들기](06-findable.html)
 
-## Other Resources
+## 기타 학습자원
 
-*   [Motivation](motivation.html)
-*   [Reference](reference.html)
-*   [Discussion](discussion.html)
-*   [Instructor's Guide](instructors.html)
+*   [동기](motivation.html)
+*   [참고문헌](reference.html)
+*   [토의](discussion.html)
+*   [강사 안내서](instructors.html)
