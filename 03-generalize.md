@@ -1,27 +1,27 @@
 ---
 layout: page
-title: Working With Data on the Web
-subtitle: Generalizing and Handling Errors
+title: 웹에 있는 데이터 작업
+subtitle: 오류(Error) 처리와 일반화
 minutes: 15
 ---
-> ## Learning Objectives {.objectives}
+> ## 학습목표 {.objectives}
 >
-> *   Turn a script into a function.
-> *   Make a function more robust by explicitly handling errors.
+> *   스크립트를 함수로 바꾸기.
+> *   오류를 명시적으로 처리함으로써 함수를 더 강건하게 만든다.
 
-Now that we know how to get the data for Canada,
-let's create a function that will do the same thing for an arbitrary country.
-The steps are simple:
+캐나다에 대한 데이터를 얻는 방법을 이제 알게되었으니, 
+임의 나라에 대해서 동일한 작업을 수행하는 함수를 작성하자. 
+절차는 단순하다: 
 
-1.  copy the code we've written into a function that takes a 3-letter country code as a parameter,
-2.  insert that country code into the URL at the appropriate place, and
-3.  return the result as a list instead of printing it.
+1.  작성한 코드를 복사해서 3-문자 국가코드를 매개변수로 받는 함수를 작성한다.
+2.  국가코드를 적당한 곳에 URL에 삽입한다.
+3.  화면에 출력하는 대신에 리스트로 결과를 반환한다.
 
-The resulting function looks like:
+작업결과 함수는 다음과 같다:
 
 ~~~ {.python}
 def annual_mean_temp(country):
-    '''Get the annual mean temperature for a country given its 3-letter ISO code (such as "CAN").'''
+    ''' ("CAN" 처럼) 3-문자로 된 ISO코드로 특정 국가에 대한 연평균 기온정보를 얻어온다.'''
     url = 'http://climatedataapi.worldbank.org/climateweb/rest/v1/country/cru/tas/year/' + country + '.csv'
     response = requests.get(url)
     if response.status_code != 200:
@@ -37,7 +37,7 @@ def annual_mean_temp(country):
         return results
 ~~~
 
-This works:
+상기 함수는 다음과 같이 동작한다:
 
 ~~~ {.python}
 canada = annual_mean_temp('CAN')
@@ -47,9 +47,7 @@ print('first three entries for Canada:', canada[:3])
 first three entries for Canada: [[1901, -7.67241907119751], [1902, -7.862711429595947], [1903, -7.910782814025879]]
 ~~~
 
-However,
-there's a problem.
-Look what happens when we pass in an invalid country identifier:
+하지만 문제가 있다. 유효하지 않는 국가 식별자를 매개변수로 전달할 때 무슨일이 발생하는지 살펴보자:
 
 ~~~ {.python}
 latveria = annual_mean_temp('LTV')
@@ -59,21 +57,18 @@ print 'first three entries for Latveria:', latveria[:3]
 first three entries for Latveria: []
 ~~~
 
-Latveria doesn't exist,
-so why is our function returning an empty list rather than printing an error message?
-The non-appearance of an error message must mean that the response code was 200;
-if it was anything else,
-we would have gone into the `if` branch,
-printed a message,
-and returned `None`
-(which is what functions do when they're not told to return anything specific).
+Latveria는 존재하지 않는다. 
+그래서 왜 작성한 함수는 오류 메시지를 출력하는 대신에 빈 리스트를 반환할까? 
+오류 메시지가 없다는 의미는 응답코드가 200을 의미한다: 
+만약 그밖의 일이 있다면, `if` 분기로 가서
+메시지를 출력하고 `None`을 반환한다(특정한 어떤 것도 반환하지 않고자 할 때 함수가 수행하는 작업).
 
-So if the response code was 200 and there was no data, that would explain what we're seeing.
-Let's check:
+그래서, 만약 응답코드가 200이고 어떤 데이터도 없다면, 지금 보고 있는 것이 설명된다.
+검사해보자:
 
 ~~~ {.python}
 def annual_mean_temp(country):
-    '''Get the annual mean temperature for a country given its 3-letter ISO code (such as "CAN").'''
+    ''' ("CAN" 처럼) 3-문자로 된 ISO코드로 특정 국가에 대한 연평균 기온정보를 얻어온다.'''
     url = 'http://climatedataapi.worldbank.org/climateweb/rest/v1/country/cru/tas/year/' + country + '.csv'
     print('url used is', url)
     response = requests.get(url)
@@ -101,19 +96,16 @@ length of data: 0
 number of records for Latveria: 0
 ~~~
 
-In other words,
-the World Bank is always saying,
-"I was able to answer your query,"
-even when it actually can't.
-After a bit more experimenting, we discover that the site *always* returns a 200 status code.
-The only way to tell if there's real data or not is to check if `response.text` is empty.
-Here's the updated function:
+다른 말로, 세계은행 사이트는 설사 실제로 그럴 수 없을때도, 항상 "여러분의 질의에 대답할 수 있어요"라고 말하고 있다.
+약간 더 실험한 후에, 200 상태 코드를 *항상* 반환하는 것을 발견했다. 
+실제 데이터가 있는지 없는지를 알 수 있는 유일한 방식은 `response.text`가 비었는지 점검하는 것이다. 
+다음에 갱신된 함수가 있다:
 
 ~~~ {.python}
 def annual_mean_temp(country):
-    '''
-    Get the annual mean temperature for a country given its 3-letter ISO code (such as "CAN").
-    Returns an empty list if the country code is invalid.
+    ''' 
+    ("CAN" 처럼) 3-문자로 된 ISO코드로 특정 국가에 대한 연평균 기온정보를 얻어온다.
+    만약 국가코드가 적법하지 않다면, 빈 리스트를 반환하라.
     '''
     url = 'http://climatedataapi.worldbank.org/climateweb/rest/v1/country/cru/tas/year/' + country + '.csv'
     response = requests.get(url)
@@ -135,14 +127,14 @@ number of records for Canada: 109
 number of records for Latveria: 0
 ~~~
 
-Now that we can get surface temperatures for different countries,
-we can write a function to compare those values.
-(We'll jump straight into writing a function because by now it's clear that's what we're eventually going to do anyway.)
-Here's our first attempt:
+다른 국가에 대한 지상 기온을 얻을 수 있기 때문에, 
+국가 온도를 비교하는 함수를 작성할 수 있다. 
+(이제 궁극적으로 작업하려는 것에 대해서 명확해졌기 때문에, 바로 함수를 작성한다.) 
+다음에 시도한 첫번째 함수가 있다:
 
 ~~~ {.python}
 def diff_records(left, right):
-    '''Given lists of [year, value] pairs, return list of [year, difference] pairs.'''
+    '''[year, value] 리스트 짝이 주어지면, [year, difference] 리스트 짝을 반환하라.'''
     num_years = len(left)
     results = []
     for i in range(num_years):
@@ -153,19 +145,18 @@ def diff_records(left, right):
     return results
 ~~~
 
-Here, we're using the number of entries in `left` (which we find with `len(left)`) to control our loop.
-The expression:
+여기서 루프 제어를 위해서 `left`에 항목 숫자를 사용한다. (항목갯수는 `len(left)`로 찾을 수 있다.)
 
 ~~~ {.python}
 for i in range(num_years):
 ~~~
 
-runs `i` from 0 to `num_years-1`, which corresponds exactly to the legal indices of `left`.
-Inside the loop we unpack the left and right years and values from the list entries,
-then append a pair containing a year and a difference to `results`,
-which we return at the end.
+상기 표현식은 0부터 `num_years-1`까지 `i`를 실행한다. 
+정확하게 `left` 인덱스와 상응한다. 
+루프 내부에서 리스트 항목에서 왼쪽, 오른쪽 년도와 값을 풀어서 년도와 차이값을 `results`에 추가한다. 
+그리고 마지막에 결과를 반환한다.
 
-To see if this function works, we can run a couple of tests on made-up data:
+작성한 함수가 동작하는지 살펴보기 위해서, 몇개 가상으로 데이터를 만들어서 실행한다:
 
 ~~~ {.python}
 print('one record:', diff_records([[1900, 1.0]],
@@ -178,7 +169,7 @@ one record: [[1900, -1.0]]
 two records: [[1900, -1.0], [1901, -10.0]]
 ~~~
 
-That looks pretty good—but what about these cases?
+매우 좋아 보인다— 하지만, 다음 테스트 케이스는 어떨까?
 
 ~~~ {.python}
 print('mis-matched years:', diff_records([[1900, 1.0]],
@@ -208,23 +199,24 @@ left is shorter [[1900, -9.0]]
 right is shorter
 ~~~
 
-The first test gives us an answer even though the years didn't match:
-we get a result, but it's meaningless.
-The second case gives us a partial result,
-again without telling us there's a problem,
-while the third crashes because we're using `left` to determine the number of records,
-but `right` doesn't have that many.
+설사 년도가 매칭되지 않지 않더라도, 첫번째 테스트는 답을 제시한다: 
+결과값을 얻었지만, 무의미하다. 
+두번째 테스트 케이스는 부분적인 결과를 제시한다. 
+이번에도 문제가 있다고 보고하지는 않는다. 
+하지만, 세번째는 프로그램이 중단된다. 
+왜냐하면 레코드 숫자를 결정하는데 `left`를 사용하지만, 
+`right`는 그만큼의 숫자를 가지고 있지 않기 때문이다.
 
-The first two problems are actually worse than the third
-because they are [silent failures](reference.html#silent-failure):
-the function does the wrong thing, but doesn't indicate that in any way.
-Let's fix that:
+첫두 문제는 세번째 것보다 사실 더 나쁘다. 
+왜냐하면 첫두 문제가 [침묵하는 실패(silent failures)](reference.html#silent-failure)의 전형이기 때문이다: 
+함수가 잘못된 것을 수행하지만, 어떤 방식으로도 나타나고 있지 않는다.
+버그를 수정해보자:
 
 ~~~ {.python}
 def diff_records(left, right):
     '''
-    Given lists of [year, value] pairs, return list of [year, difference] pairs.
-    Fails if the inputs are not for exactly corresponding years.
+    [year, value] 리스트 짝이 주어지면, [year, difference] 리스트 짝을 반환하라.
+    만약 입력이 정확하게 대응되는 년도가 아니라면 동작하지 않는다.
     '''
     assert len(left) == len(right), \
            'Inputs have different lengths.'
@@ -240,7 +232,7 @@ def diff_records(left, right):
     return results
 ~~~
 
-Do our "good" tests pass?
+작성한 "착한" 테스트 케이스는 통과했나요?
 
 ~~~ {.python}
 print('one record:', diff_records([[1900, 1.0]],
@@ -253,7 +245,7 @@ one record: [[1900, -1.0]]
 two records: [[1900, -1.0], [1901, -10.0]]
 ~~~
 
-What about our the three tests that we now expect to fail?
+이제 실패가 예상되는 세가지 테스트 케이스는 어떤가요?
 
 ~~~ {.python}
 print('mis-matched years:', diff_records([[1900, 1.0]],
@@ -317,38 +309,48 @@ AssertionError                            Traceback (most recent call last)
 AssertionError: Inputs have different lengths. right is shorter
 ~~~
 
-Excellent: the assertions we've added will now alert us if we try to work with badly-formatted or inconsistent data.
+정말 훌륭해요: 만약 올바르지 않은 형식이거나 불합치되는 데이터를 처리하려고 함면, 
+추가한 가정대입문(assertion)이 이제 경고를 보낸다.
 
->## Error Handling {.challenge}
->
-> Python scripts should have error handling code because:
->
-> 1.  Python is an inherently unreliable language.
-> 2.  Functions can return errors.
-> 3.  One should never trust the data provided is what is expected.
-> 4.  A python script would stop on an error, so the task wouldn't be accomplished.
+> ### 더 좋은 방법이 있다. {.callout}
+> 
+> 프로그램 셀 내부에서 각 테스트를 실행해야만 한다. 
+> 왜냐하면, 가정대입문이 실패하자마자 코드 실행을 파이썬이 멈추기 때문이고, 
+> 테스트 3개가 모두 실질적으로 실행되도록 확실히 하고자 한다. 
+> 단위 테스트 (unit testing) 라이브러리가 사용자를 대신해서 처리하고, 
+> 또한 그밖의 더 많은 것도 수행한다; 
+> 파이썬 중급과정에서 단위 테스트 라이브러리를 다룬다.
 
-> ## When to Complain? {.challenge}
->
-> We have actually just committed the same mistake as the World Bank:
-> if someone gives `annual_mean_temp` an invalid country identifier,
-> it doesn't report an error,
-> but instead returns an empty list,
-> so the caller has to somehow know to look for that.
-> Should it use an assertion to fail if it doesn't get data?
-> Why or why not?
 
-> ## Enumerating {.challenge}
+>## 오류 처리 {.challenge}
 >
-> Python includes a function called `enumerate` that's often used in `for` loops.
-> This loop:
+> 파이썬 스크립트는 오류처리 코드를 가져야만 된다. 왜냐하면,
+>
+> 1.  파이썬은 태생적으로 신뢰성이 떨어지는 언어다.
+> 2.  함수는 오류를 반환할 수 있다.
+> 3.  제공된 데이터가 예상하는 바와 같다고 믿어사는 않된다.
+> 4.  파이썬 스크립트는 오류가 나면 멈춘다. 그래서 작업이 완수되지 못한다.
+
+> ## 언제 불평할까? {.challenge}
+>
+> 세계은행과 동일한 실수를 방금전에 실제로 저절렀다:
+> 만약 누군가 `annual_mean_temp`에 적법하지 못한 국가 식별자를 넣게 되면,
+> 오류를 보고하지 않고, 대신에 빈 리스트를 반환한다.
+> 그래서 호출자가 어떻게든 알아야만 된다.
+> 데이터를 다운로드 받지 못할 경우 실패하는 가정대입문을 사용해야 할까? 
+> 왜 그럴까 혹은 왜 그렇지 않을까?
+
+> ## 열거(Enumerating) {.challenge}
+>
+> 파이썬은 `enumerate`라는 함수를 포함하고 있는데, 흔히 `for` 루프에 사용된다.
+> 루프가 다음과 같으면:
 >
 > ~~~ {.python}
 > for (i, c) in enumerate('abc'):
 >     print(i, '=', c)
 > ~~~
 >
-> prints:
+> 다음을 출력한다.
 >
 > ~~~ {.output}
 > 0 = a
