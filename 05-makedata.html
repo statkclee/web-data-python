@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="generator" content="pandoc">
-    <title>Software Carpentry: Working With Data on the Web</title>
+    <title>Software Carpentry: 웹에 있는 데이터 작업</title>
     <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap.css" />
@@ -26,25 +26,25 @@
       <article>
       <div class="row">
         <div class="col-md-10 col-md-offset-1">
-          <h1 class="title">Working With Data on the Web</h1>
-          <h2 class="subtitle">Publishing Data</h2>
+          <h1 class="title">웹에 있는 데이터 작업</h1>
+          <h2 class="subtitle">데이터 게시</h2>
 <section class="objectives panel panel-warning">
 <div class="panel-heading">
-<h2><span class="glyphicon glyphicon-certificate"></span>Learning Objectives</h2>
+<h2><span class="glyphicon glyphicon-certificate"></span>학습목표</h2>
 </div>
 <div class="panel-body">
 <ul>
-<li>Write Python programs that share static data sets.</li>
+<li>정적 데이터셋을 공유하는 파이썬 프로그램을 작성한다.</li>
 </ul>
 </div>
 </section>
-<p>We now have functions to download temperature data for different countries and find annual differences. The next step is to share our findings with the world by publishing the data sets we generate. To do this, we have to answer three questions:</p>
+<p>이제 다른 국가에 대한 기온데이터를 다운로드하고, 평균 온도차를 알아내는 함수를 작성했다. 다음 단계는 생성한 데이터셋을 게시함으로써 세상사람들과 발견한 것을 공유하는 것이다. 이를 위해서, 다음 세가지 질문에 답을 해야만 된다:</p>
 <ul>
-<li>How are we going to store the data?</li>
-<li>How are people going to download it?</li>
-<li>How are people going to find it?</li>
+<li>어떻게 데이터를 저장할 것인가?</li>
+<li>사람들이 데이터를 어떻게 다운로드 받을 것인가?</li>
+<li>사람들이 데이터를 어떻게 찾을 것인가?</li>
 </ul>
-<p>The first question is the easiest to answer: <code>diff_records</code> returns a list of (year, difference) pairs that we can write out as a CSV file:</p>
+<p>첫번째 두가지 질문은 답하기가 쉽다: <code>diff_records</code>는 CSV 파일로 저장할 수 있는 (year, difference) 리스트 짝을 반환한다:</p>
 <pre class="sourceCode python"><code class="sourceCode python"><span class="ch">import</span> csv
 
 <span class="kw">def</span> save_records(filename, records):
@@ -54,22 +54,21 @@
         writer.writerows(records)</code></pre>
 <aside class="callout panel panel-info">
 <div class="panel-heading">
-<h2><span class="glyphicon glyphicon-pushpin"></span>Lessons Learned</h2>
+<h2><span class="glyphicon glyphicon-pushpin"></span>학습한 교훈</h2>
 </div>
 <div class="panel-body">
-<p>We use the <code>csv</code> library to write data for the same reason we use it to read: it correctly handles special cases (such as text containing commas).</p>
+<p>데이터를 읽을 때 사용한 것과 동일한 이유로 <code>csv</code> 라이브러리를 사용한다: <code>csv</code> 라이브러리는 올바르게 (콤마를 포함한 텍스트 같은)특수한 경우를 처리한다.</p>
 </div>
 </aside>
-<p>Let’s test it:</p>
+<p>테스트 해보자:</p>
 <pre class="sourceCode python"><code class="sourceCode python">save_records(<span class="st">&#39;temp.csv&#39;</span>, [[<span class="dv">1</span>, <span class="dv">2</span>], [<span class="dv">3</span>, <span class="dv">4</span>]])</code></pre>
-<p>If we then look in the file <code>temp.csv</code>, we find:</p>
+<p><code>temp.csv</code> 파일을 열게되면, 기대한 대로 다음이 저장되어 있다:</p>
 <pre><code>1,2
 3,4</code></pre>
-<p>as desired.</p>
-<p>Now, where should this file go? The answer is clearly “a server”, since data on our laptop is only accessible when we’re online (and probably not even then, since most people don’t run a web server on their laptop). But where on the server, and what should we call it?</p>
-<p>The answer to those questions depends on how the server is set up. On many multi-user Linux machines, users can create a directory called like <code>public_html</code> under their home directory, and the web server will automatically search in those directories. For example, if Nelle has a file called <code>thesis.pdf</code> in her <code>public_html</code> directory, the web server will find it when it gets the URL <code>http://the.server.name/~nelle/thesis.pdf</code>. (The tilde <code>~</code> in front of Nelle’s name is what tells the web server to look in Nelle’s <code>public_html</code> directory.) The specifics differ from one machine to the next, but the basic idea stays the same.</p>
-<p>As for what we should call it, here we return to the key idea in REST: every data set should be identified by a “guessable” URL. In our case we’ll use a name like <code>left-right.csv</code>, where <code>left</code> and <code>right</code> are the three-letter codes of the countries whose temperatures we are differencing. We can then tell people that if they want to compare Australia and Brazil, they should look for <code>http://the.server.name/~nelle/AUS-BRA.csv</code>. (We use upper case to be consistent with the World Bank’s API.)</p>
-<p>But what’s to prevent someone from creating a badly-named (and therefore unfindable) file? Someone could, for example, call <code>save_records('aus+bra.csv', records)</code>. To reduce the odds of this happening, let’s modify <code>save_records</code> to take country identifiers as parameters:</p>
+<p>이제, 이 파일이 어디로 가야할까? 대답은 분명하게 “서버(server)”가 되는데, 이유는 노트북에 저장된 데이터는 작업할 때만 접속이 가능하기 때문이다. (그리고, 대부분의 사람이 노트북에 웹서버를 실행하고 있지 않기 때문이다.) 하지만, 서버에서 어느 장소, 그리고 어떻게 호출해야 하나?</p>
+<p>이런 질문에 대한 대답은 서버가 구축되는 방법에 달려있다. 사용자 다수가 사용하는 리눅스 컴퓨터에, 사용자는 홈 디렉토리 아래 <code>public_html</code> 같은 디렉토리를 생성할 수 있다. 웹서버는 자동적으로 이 디렉토리를 검색한다. 예를 들어, 만약 Nelle이 <code>public_html</code> 디렉토리에 <code>thesis.pdf</code> 이라는 파일을 갖고 있다면, 웹서버가 URL <code>http://the.server.name/~nelle/thesis.pdf</code> 요청을 받게될 때, 웹서버가 해당 디렉토리를 찾게된다. (Nelle 이름 앞에 <code>~</code> 물결표시는 웹서버에게 Nelle의 <code>public_html</code> 디렉토리를 찾도록 일러주는 역할을 한다.) 구체적인 사항은 컴퓨터마다 차이가 날 수 있지만, 기본적인 아이디어는 같다.</p>
+<p>호출하는 방법에 대해서, REST 핵심 아이디어로 돌아간다: 모든 데이터셋은 “추측할 수 있는(guessable)” URL에 의해서 식별되어야만 된다. 여기 사례에서, <code>left-right.csv</code> 같은 명칭을 사용하는데, <code>left</code>와 <code>right</code>는 기온을 차이를 비교하는 3-문자 국가 코드다. 만약 호주와 브라질을 비교하려면, <code>http://the.server.name/~nelle/AUS-BRA.csv</code> 에서 찾아야 된다고 사람들에게 일러줘야 된다. (세계은행 API와 일관성 있게 대문자를 사용한다.)</p>
+<p>하지만, 누군가 나쁜-이름으로 (따라서 찾을 수 없는) 파일을 생성하지 못하게 어떻게 할 수 있을까? 예를 들어, 누군가 <code>save_records('aus+bra.csv', records)</code> 부를 수 있다. 이런 일이 발생할 가능성을 줄이도록 하기 위해서, <code>save_records</code>를 변경해서 매개변수로 국가식별자를 받도록 하자:</p>
 <pre class="sourceCode python"><code class="sourceCode python"><span class="ch">import</span> csv
 
 <span class="kw">def</span> save_records(left, right, records):
@@ -78,36 +77,36 @@
     <span class="kw">with</span> <span class="dt">open</span>(filename, <span class="st">&#39;w&#39;</span>) <span class="ch">as</span> raw:
         writer = csv.writer(raw)
         writer.writerows(records)</code></pre>
-<p>We can now call it like this:</p>
+<p>다음과 같이 이제 호출할 수 있다:</p>
 <pre class="sourceCode python"><code class="sourceCode python">save_records(<span class="st">&#39;AUS&#39;</span>, <span class="st">&#39;BRA&#39;</span>, [[<span class="dv">1</span>, <span class="dv">2</span>], [<span class="dv">3</span>, <span class="dv">4</span>]])</code></pre>
-<p>and then check that the right output file has been created. We are bound to have the country codes anyway (having used them to look up our data), so this should seem natural to our users.</p>
+<p>그리고 나서, 올바른 출력파일이 생성되었는지 검사한다. 어쨌든 국가코드에 구속되어서(국가코드를 사용해서 데이터를 검색했다), 사용자에게도 자연스러워 보여야 된다.</p>
 <section class="challenge panel panel-success">
 <div class="panel-heading">
-<h2><span class="glyphicon glyphicon-pencil"></span>Deciding What to Check</h2>
+<h2><span class="glyphicon glyphicon-pencil"></span>무엇을 검사할지 결정</h2>
 </div>
 <div class="panel-body">
-<p>Should <code>save_records</code> check that every record in its input has exactly two fields? Why or why not? What about country codes - should it contain a list of those that match actual countries and check that <code>left</code> and <code>right</code> are in that list?</p>
+<p><code>save_records</code>는 입력으로 모든 레코드가 정확하게 두 필드를 갖는지 검사해야만 되는가? 왜 혹은 왜 그렇지 않는가? 국가코드는 어떤가 - 국가코드는 실제 국가와 매칭되는 국가코드 목록을 담고 있어야 되는가 그리고 <code>left</code> 과 <code>right</code>이 해당 목록에 있는지 검사해야 되는가?</p>
 </div>
 </section>
 <section class="challenge panel panel-success">
 <div class="panel-heading">
-<h2><span class="glyphicon glyphicon-pencil"></span>Setting Up Locally</h2>
+<h2><span class="glyphicon glyphicon-pencil"></span>로컬에 구축하기</h2>
 </div>
 <div class="panel-body">
-<p>Find out how to publish a file on your department’s server.</p>
+<p>학과 서버에 파일을 어떻게 게시할 수 있는지 알아내시오.</p>
 </div>
 </section>
 <section class="challenge panel panel-success">
 <div class="panel-heading">
-<h2><span class="glyphicon glyphicon-pencil"></span>Published Data Consistency</h2>
+<h2><span class="glyphicon glyphicon-pencil"></span>게시된 데이터 일관성</h2>
 </div>
 <div class="panel-body">
-<p>It is important for the file names of published data to be consistent because:</p>
+<p>게시된 데이터 파일 명칭이 일관성을 갖는게 중요한데 이유는 다음과 같다:</p>
 <ol style="list-style-type: decimal">
-<li>Some operating systems (e.g. Windows) treat spaces differently.</li>
-<li>You may not have access to your department’s server to rename them.</li>
-<li>The <code>csv</code> library requires it.</li>
-<li>Programs can only process files and data correctly when they are.</li>
+<li>일부 운영체제(예를 들어, 윈도우)는 공백을 다르게 처리한다.</li>
+<li>파일 명칭을 바꾸려고 하는데, 학과 서버에 접근할 수 없을 수 있다.</li>
+<li><code>csv</code> 라이브러리가 일관성을 요구한다.</li>
+<li>프로그램은 올바르게 파일과 데이터가 있을 때만 처리할 수 있다.</li>
 </ol>
 </div>
 </section>
