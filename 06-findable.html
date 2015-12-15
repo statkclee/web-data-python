@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="generator" content="pandoc">
-    <title>Software Carpentry: Working With Data on the Web</title>
+    <title>Software Carpentry: 웹에 있는 데이터 작업</title>
     <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap.css" />
@@ -26,26 +26,26 @@
       <article>
       <div class="row">
         <div class="col-md-10 col-md-offset-1">
-          <h1 class="title">Working With Data on the Web</h1>
-          <h2 class="subtitle">Making Data Findable</h2>
+          <h1 class="title">웹에 있는 데이터 작업</h1>
+          <h2 class="subtitle">데이터를 찾을 수 있게 만들기</h2>
 <section class="objectives panel panel-warning">
 <div class="panel-heading">
-<h2><span class="glyphicon glyphicon-certificate"></span>Learning Objectives</h2>
+<h2><span class="glyphicon glyphicon-certificate"></span>학습목표</h2>
 </div>
 <div class="panel-body">
 <ul>
-<li>Make data sets more useful by providing metadata.</li>
+<li>메타데이터(metadata)를 제공해서 데이터셋을 더 유용하게 만든다.</li>
 </ul>
 </div>
 </section>
-<p>It’s not enough to tell people what the rule is for creating filenames, since that doesn’t tell them what data sets we’ve actually generated. The final step in this lesson is therefoore to make the data we generate findable by creating an <a href="reference.html#index">index</a> to tell people what files exist.</p>
-<p>Here’s the format we will use:</p>
+<p>파일명칭을 생성하는데 어떤 규칙이 있는지 일러주는 것으로 충분하지 못하다. 왜냐하면, 실제로 어떤 데이터셋을 생성해내는지 말해주지 않기 때문이다. 따라서, 이번 수업의 마지막 단계는 생성한 데이터를 찾을 수 있도록 무슨 파일이 존재하는지 일러주는 <a href="reference.html#index">색인(index)</a>을 생성한다.</p>
+<p>다음에 사용할 형식이 나와 있다:</p>
 <pre><code>2014-05-26,FRA,TCD,FRA-TCD.csv
 2014-05-27,AUS,BRA,AUS-BRA.csv
 2014-05-27,AUS,CAN,AUS-CAN.csv
 2014-05-28,BRA,CAN,BRA-CAN.csv</code></pre>
-<p>The columns are the date the data set was generated, the identifiers of the two countries being compared, and the name of the data file. We include the date to make it easy for people to see what’s been updated when, but why do we bother to include the filename? After all, we can re-generate it easily given the two country codes. The answer is that while <em>we</em> know the rule for generating filenames, other people’s programs shouldn’t have to.</p>
-<p>Here’s a function that updates the index file every time we generate a new data file:</p>
+<p>칼럼은 데이터셋이 생성된 일자, 비교되는 두 국가에 대한 식별자, 데이터파일 명칭이다. 날짜를 포함해서 어느 시점에 갱신되었는지 알기 쉽게 한다. 하지만, 왜 귀찮게 파일명칭을 포함할까? 결국, 두 국가코드가 주어지면 쉽게 파일을 다시 생성할 수 있다. 대답은 <em>작성자 우리</em>는 생성되는 파일명칭에 대한 규칙을 알고 있지만, 다른 사람의 프로그램은 그럴 필요가 없다는 것이다.</p>
+<p>다음에 새로운 데이터 파일을 생성할 때마다 인덱스 파일을 갱신하는 함수가 나와 있다:</p>
 <pre class="sourceCode python"><code class="sourceCode python"><span class="ch">import</span> time
 
 <span class="kw">def</span> update_index(index_filename, left, right):
@@ -68,20 +68,20 @@
     <span class="kw">with</span> <span class="dt">open</span>(index_filename, <span class="st">&#39;w&#39;</span>) <span class="ch">as</span> raw:
         writer = csv.writer(raw)
         writer.writerows(records)</code></pre>
-<p>Let’s test it. If our index file contains:</p>
+<p>프로그램을 테스트해보자. 만약 색인 파일이 다음을 포함하고 있다면:</p>
 <pre><code>2014-05-26,FRA,TCD,FRA-TCD.csv
 2014-05-27,AUS,BRA,AUS-BRA.csv
 2014-05-27,AUS,CAN,AUS-CAN.csv
 2014-05-28,BRA,CAN,BRA-CAN.csv</code></pre>
-<p>and we run:</p>
+<p>그리고, 실행하면:</p>
 <pre class="sourceCode python"><code class="sourceCode python">update_index(<span class="st">&#39;data/index.csv&#39;</span>, <span class="st">&#39;TCD&#39;</span>, <span class="st">&#39;CAN&#39;</span>)</code></pre>
-<p>then our index file now contains:</p>
+<p>그리고 나면 색인 파일은 이제 다음을 담고 있게된다:</p>
 <pre><code>2014-05-26,FRA,TCD,FRA-TCD.csv
 2014-05-27,AUS,BRA,AUS-BRA.csv
 2014-05-27,AUS,CAN,AUS-CAN.csv
 2014-05-28,BRA,CAN,BRA-CAN.csv
 2014-05-29,TCD,CAN,TCD-CAN.csv</code></pre>
-<p>Now that all of this is in place, it’s easy for us—and other people—to do new and exciting things with our data. For example, we can easily write a small program that tells us what data sets include information about a particular country <em>and</em> have been published since we last checked:</p>
+<p>이제 모든 것이 제자리에 있기 때문에, 우리 자신이나 다른 사람도 작성한 데이터로 새롭고 흥미로운 것을 수행하기 쉽다. 예를 들어, 쉽게 작은 프로그램을 작성해서 어떤 데이터셋이 특정 국가에 관한 정보를 포함하고 있는지, 마지막 검사한 이래로 게시되었는지 알수 있게 된다:</p>
 <pre class="sourceCode python"><code class="sourceCode python"><span class="kw">def</span> what_is_available(index_file, country, after):
     <span class="co">&#39;&#39;&#39;What data files include a country and have been published since &#39;after&#39;?&#39;&#39;&#39;</span>
     <span class="kw">with</span> <span class="dt">open</span>(index_file, <span class="st">&#39;r&#39;</span>) <span class="ch">as</span> raw:
@@ -96,55 +96,55 @@
 <pre class="output"><code>[&#39;AUS-BRA.csv&#39;, &#39;BRA-CAN.csv&#39;]</code></pre>
 <aside class="callout panel panel-info">
 <div class="panel-heading">
-<h2><span class="glyphicon glyphicon-pushpin"></span>New Kinds of Science</h2>
+<h2><span class="glyphicon glyphicon-pushpin"></span>새로운 유형의 과학</h2>
 </div>
 <div class="panel-body">
-<p>This may not seem like a breakthrough, but it is actually an example of how the web helps researchers do new kinds of science. With a little bit more work, we could create a file on <em>our</em> machine to record when we last ran <code>what_is_available</code> for each of several different sites that are producing data. Each time we run it, our program would:</p>
+<p>이것이 돌파구처럼 보이지는 않을지도 모르지만, 실제로 웹이 어떻게 과학연구자를 도와서 새로운 유형의 과학을 수행하는지에 관한 한 사례다. 약간 더 작업을 하면, <em>본인</em> 컴퓨터에 파일을 생성해서 언제 마지막으로 데이터를 생성한 각기 다른 사이트에 대해서 <code>what_is_available</code> 프로그램을 실행했는지 기록할 수 있다. 매번 프로그램을 실행할 때마다, 작성한 프로그램은 다음을 수행한다:</p>
 <ul>
-<li>read our local “what to check” file;</li>
-<li>ask each data source whether it had any new data for us;</li>
-<li>download and process that data; and</li>
-<li>present us with a summary of the results.</li>
+<li>로컬 컴퓨터에 있는 “점검목록” 파일을 읽어들인다;</li>
+<li>각 데이터에 대해 어떤 새로운 데이터가 있는지 물어본다;</li>
+<li>해당 데이터를 다운로드하고 처리한다; 그리고</li>
+<li>사용자에게 결과를 요약하여 제시한다.</li>
 </ul>
-<p>This is exactly how blogs work. Every blog reader keeps a list of blog URLs that it’s supposed to check. When it is run, it goes to each of those sites and asks them for their index file (which is typically called something like <code>feed.xml</code>). It then checks the articles listed in that index against its local record of what has already been seen, then downloads any articles that are new. By automating this process, blogging tools help us focus attention on things that are actually worth looking at.</p>
+<p>이것이 정확하게 블로그 프로그램이 동작하는 방식이다. 모든 블로그 리더(reader) 프로그램은 점검하기로 된 블로그 URL 목록을 간직하고 있다. 프로그램이 실행될 때, 각 사이트로 가서 (<code>feed.xml</code>처럼 불리는 전형적인) 색인 파일에 물어본다. 그리고 나서, 이미 살펴본 로컬 기록과 해당 색인에 등재된 기사를 점검한다. 그리고 나서, 새로운 기사를 다운로드한다. 이런 과정을 자동화함으로써, 블로깅 도구가 실제로 볼 가치가 있는 것에만 집중하도록 돕고 있다.</p>
 </div>
 </aside>
 <section class="challenge panel panel-success">
 <div class="panel-heading">
-<h2><span class="glyphicon glyphicon-pencil"></span>Indexing</h2>
+<h2><span class="glyphicon glyphicon-pencil"></span>색인(Indexing)</h2>
 </div>
 <div class="panel-body">
-<p>We should always create an index for generated data because:</p>
+<p>생성된 데이터에 대한 색인을 항상 생성해야만 된다. 왜냐하면:</p>
 <ol style="list-style-type: decimal">
-<li>It can be checked in an automated way for changes.</li>
-<li>The web server will not display the directory without an index.</li>
-<li>REST APIs require an index to function.</li>
-<li>It is too complicated for a program to calculate itself.</li>
+<li>변경에 대해서 자동화된 방식으로 점검을 할 수 있다.</li>
+<li>웹서버는 색인없이 디렉토리를 보여주지 않는다.</li>
+<li>REST API는 함수에 색인을 요구한다.</li>
+<li>너무나 복잡해서 프로그램 스스로 계산할 수 없다.</li>
 </ol>
 </div>
 </section>
 <section class="challenge panel panel-success">
 <div class="panel-heading">
-<h2><span class="glyphicon glyphicon-pencil"></span>Metadata for Metadata</h2>
+<h2><span class="glyphicon glyphicon-pencil"></span>메타데이터에 대한 메타데이터</h2>
 </div>
 <div class="panel-body">
-<p>Should the first line of the index file be a header giving the names of the columns? Why or why not?</p>
+<p>인덱스 파일의 첫번째 줄이 칼럼 명칭정보를 부여하는 헤더여야만 되는가? 왜 혹은 왜 아닌가?</p>
 </div>
 </section>
 <section class="challenge panel panel-success">
 <div class="panel-heading">
-<h2><span class="glyphicon glyphicon-pencil"></span>To Automate or Not</h2>
+<h2><span class="glyphicon glyphicon-pencil"></span>자동화할 것인가 말 것인가</h2>
 </div>
 <div class="panel-body">
-<p>Should <code>update_index</code> be called inside <code>save_records</code> so that the index is automatically updated every time a new data set is generated? Why or why not?</p>
+<p><code>save_records</code> 내부에서 <code>update_index</code>을 호출되어서 새로운 데이터가 생성될 때마다 자동으로 색인이 갱신되어야 될까? 왜 혹은 왜 아닌가?</p>
 </div>
 </section>
 <section class="challenge panel panel-success">
 <div class="panel-heading">
-<h2><span class="glyphicon glyphicon-pencil"></span>Removing Redundant Redundancy</h2>
+<h2><span class="glyphicon glyphicon-pencil"></span>불필요한 쓸모 없는 것 제거</h2>
 </div>
 <div class="panel-body">
-<p><code>update_index</code> and <code>save_records</code> both construct the name of the data file. Refactor them to remove this redundancy.</p>
+<p><code>update_index</code> 와 <code>save_records</code> 모두 데이터 파일 명칭을 만들어낸다. 리팩토링해서 이런 불필요함을 제거하라.</p>
 </div>
 </section>
         </div>

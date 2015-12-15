@@ -26,7 +26,7 @@ title: 웹에 있는 데이터 작업
 3.  [오류(Error) 처리와 일반화](03-generalize.html)
 4.  [시각화](04-visualize.html)
 5.  [데이터 게시](05-makedata.html)
-6.  [데이터를 찾울 수 있게 만들기](06-findable.html)
+6.  [데이터를 찾을 수 있게 만들기](06-findable.html)
 
 ## 기타 학습자원
 
